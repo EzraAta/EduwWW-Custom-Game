@@ -1,0 +1,139 @@
+<html>
+<head>
+<title> Skate X </title>
+<script src="https://simplycodingcourses.com/files/simply.js"></script>
+	<script>
+		function start(){
+		sjs.open("target", 800, 500);
+		var background = new sjs.Image("Images/skatepark1.png");
+		background.setSize(2500, 600);
+
+		
+
+
+		//Player
+
+		var player = new sjs.Image("Images/enzo_idle.png");
+		player.type = "player";
+		player.setSize(107,114);
+		player.setGravity(3);
+		player.bottom();
+		player.friction = .3;
+
+		sjs.scrollable(player,background);
+
+		//Player Controls
+	
+		var r_images = ["Images/enzo_skatingidleL.png", "Images/enzo_skatingL1.png", "Images/enzo_skatingL2.png", "Images/enzo_skatingL3.png", "Images/enzo_skatingL4.png", "Images/enzo_skatingL5.png", "Images/enzo_skatingL6.png"];
+
+		var l_images = ["Images/enzo_skatingidleR.png", "Images/enzo_skatingR1.png", "Images/enzo_skatingR2.png", "Images/enzo_skatingR3.png", "Images/enzo_skatingR4.png", "Images/enzo_skatingR5.png", "Images/enzo_skatingR6.png"];
+
+		var r_facing = true;
+		var r_track = 0;
+		var l_track = 0;
+
+		sjs.keyDown(RIGHT_KEY, function(){
+			r_facing = true;
+			r_track = r_track + 1;
+			player.pushRight(2);
+			player.setImage(r_images[r_track]);
+			if(r_track == 4){
+				r_track = 0;
+			}
+		});
+
+		
+		sjs.keyDown(LEFT_KEY, function(){
+			r_facing = false;
+			l_track = l_track + 1;
+			player.pushLeft(2);
+			player.setImage(l_images[l_track]);
+			if(l_track == 4){
+				l_track = 0;
+			}
+		});
+
+		window.addEventListener("keyup", function(e){
+			if(e.keyCode == RIGHT_KEY){
+				player.setImage("Images/enzo_skatingidleL.png");
+				r_track = 0;
+			} else if (e.keyCode == LEFT_KEY){
+				player.setImage("Images/enzo_skatingidleR.png");
+				l_track = 0;
+			}
+		});
+
+
+		//Powerup
+
+		sjs.loadImageArray('[{"x":960,"y":540, "sx":0, "sy":0, "topSpeed":10, "src":"Images/candy_powerup.png", "type":"powerUp", "friction":0.05, "classType":"Image"}]');
+
+		sjs.onHit("powerUp","bottom_screen",function(x,y){
+			x.destroy();
+		});
+
+
+		sjs.onHit("player","powerUp",function(x,y){
+			x.grow(60,30);
+			setTimeout(function(){
+				x.grow(-60,-30);
+			}, 4000);
+			y.destroy();
+		});
+
+		//Finish Line
+
+			sjs.loadImageArray('[{"x":2640,"y":1500, "sx":0, "sy":0, "topSpeed":10, "src":"Images/flag.png", "type":"flag", "friction":0.05, "classType":"Image"}]');
+			sjs.onHit("player","flag",function(x,y){
+				window.location = "winpage.html";
+			});
+
+			//Obstacle
+
+			sjs.loadImageArray('[{"x":2036.0243411898823,"y":473.5,"sx":0,"sy":0,"topSpeed":10,"src":"Images/rock.png","alt":"add text","type":"rock","friction":0.05,"classType":"Image"}]')
+			sjs.onHit("player","rock",function(x,y){
+				y.destroy();
+			});
+
+			//Music
+
+			function sound(src) {
+		    this.sound = document.createElement("audio");
+		    this.sound.src = src;
+		    this.sound.setAttribute("preload", "auto");
+		    this.sound.setAttribute("controls", "none");
+		    this.sound.style.display = "none";
+		    document.body.appendChild(this.sound);
+		    this.play = function(){
+		        this.sound.play();
+	    	}    
+			}
+
+			var myGamePiece;
+			var myObstacles = [];
+			var mySound;
+			var myMusic;
+
+			function startGame() {
+			    myGamePiece = new component(30, 30, "red", 10, 120);
+			    myMusic = new sound("mad_robots.mp3");
+			    myMusic.play();
+			    myGameArea.start();
+			}
+
+
+
+		
+
+		}
+	</script>
+</head>
+<body onload="start()">
+<h1> Skate X </h1>
+
+<center>
+</center>
+
+<div id="target" style="margin:auto;background:grey;"></div>
+</body>
+</html>
